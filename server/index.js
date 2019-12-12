@@ -1,19 +1,24 @@
 import React from 'react'
 import {renderToString} from 'react-dom/server'
 import express from 'express'
+import {StaticRouter} from 'react-router-dom'
 import App from '../src/App'
-
+import {Provider} from 'react-redux'
+import store from '../src/store/store'
 
 const app=express();
 app.use(express.static('public'))
 // app.use(express.static(path.join(__dirname,'public')))
-app.get('/',(req,res)=>{
-    // console.log('---------------------')
-    // const Page=<App name='尹肖鹏133'></App>
-    // console.log(Page)
-    const content=renderToString(App)
-    console.log(content)
-
+app.get('*',(req,res)=>{
+  console.log(req.url)
+    const content=renderToString(
+        <Provider store={store}>
+            <StaticRouter location={req.url}>
+                {App}
+            </StaticRouter>
+        </Provider>
+    )
+    
     res.send(`
     <html>
         <head>
